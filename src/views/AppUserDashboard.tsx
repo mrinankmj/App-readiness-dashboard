@@ -28,7 +28,7 @@ export const AppUserDashboard: React.FC<AppUserDashboardProps> = ({ appData }) =
       {/* Pipeline Section */}
       <div>
         <div className="mb-3 md:mb-4">
-          <h2 className="text-lg md:text-xl font-bold text-gray-900">Pipeline Explorer</h2>
+          <h2 className="text-lg md:text-xl font-bold text-gray-900">Checklist</h2>
           <p className="text-xs md:text-sm text-gray-600 mt-1">
             Track your application readiness across all stages
           </p>
