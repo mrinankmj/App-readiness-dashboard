@@ -106,7 +106,7 @@ export const EngineerDashboard: React.FC<EngineerDashboardProps> = ({ appData, o
       <div>
         <div className="mb-3 md:mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-lg md:text-xl font-bold text-gray-900">Pipeline Configuration</h2>
+            <h2 className="text-lg md:text-xl font-bold text-gray-900">Checklist</h2>
             <p className="text-xs md:text-sm text-gray-600 mt-1">
               Manage tools and stages for {appData.appName}
             </p>
