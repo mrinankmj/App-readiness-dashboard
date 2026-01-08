@@ -10,9 +10,10 @@ import { Settings, Database, Users, Activity } from 'lucide-react';
 interface EngineerDashboardProps {
   appData: AppData;
   onAddTool: (stageId: string, toolName: string, toolDescription: string) => void;
+  onAddPhaseItem: (stageId: string, phaseId: string, itemName: string) => void;
 }
 
-export const EngineerDashboard: React.FC<EngineerDashboardProps> = ({ appData, onAddTool }) => {
+export const EngineerDashboard: React.FC<EngineerDashboardProps> = ({ appData, onAddTool, onAddPhaseItem }) => {
   const [isAddToolModalOpen, setIsAddToolModalOpen] = useState(false);
   const [selectedStageId, setSelectedStageId] = useState<string>('');
 
@@ -112,10 +113,10 @@ export const EngineerDashboard: React.FC<EngineerDashboardProps> = ({ appData, o
             </p>
           </div>
           <div className="flex gap-2 w-full sm:w-auto">
-            <button className="flex-1 sm:flex-none px-3 md:px-4 py-2 text-xs md:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+            <button className="flex-1 sm:flex-none px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all">
               Export
             </button>
-            <button className="flex-1 sm:flex-none px-3 md:px-4 py-2 text-xs md:text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors">
+            <button className="flex-1 sm:flex-none px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-all shadow-sm hover:shadow-md">
               Add Stage
             </button>
           </div>
@@ -125,6 +126,7 @@ export const EngineerDashboard: React.FC<EngineerDashboardProps> = ({ appData, o
             stages={appData.stages}
             isEngineerView={true}
             onAddTool={handleAddToolClick}
+            onAddPhaseItem={onAddPhaseItem}
           />
         </div>
       </div>

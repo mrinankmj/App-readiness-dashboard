@@ -9,8 +9,35 @@ interface StagesSummaryProps {
 
 export const StagesSummary: React.FC<StagesSummaryProps> = ({ stages }) => {
   const getStageProgress = (stage: Stage) => {
-    const completed = stage.tools.filter(t => t.status === 'completed').length;
-    return (completed / stage.tools.length) * 100;
+    if (stage.phases) {
+      let totalItems = 0;
+      let completedItems = 0;
+      stage.phases.forEach(phase => {
+        totalItems += phase.items.length;
+        completedItems += phase.items.filter(item => item.status === 'complete').length;
+      });
+      return totalItems > 0 ? (completedItems / totalItems) * 100 : 0;
+    } else {
+      const completed = stage.tools.filter(t => t.status === 'completed').length;
+      return stage.tools.length > 0 ? (completed / stage.tools.length) * 100 : 0;
+    }
+  };
+
+  const getStageCounts = (stage: Stage) => {
+    if (stage.phases) {
+      let totalItems = 0;
+      let completedItems = 0;
+      stage.phases.forEach(phase => {
+        totalItems += phase.items.length;
+        completedItems += phase.items.filter(item => item.status === 'complete').length;
+      });
+      return { completed: completedItems, total: totalItems };
+    } else {
+      return {
+        completed: stage.tools.filter(t => t.status === 'completed').length,
+        total: stage.tools.length,
+      };
+    }
   };
 
   return (
@@ -24,8 +51,7 @@ export const StagesSummary: React.FC<StagesSummaryProps> = ({ stages }) => {
             .sort((a, b) => a.order - b.order)
             .map((stage) => {
               const progress = getStageProgress(stage);
-              const completed = stage.tools.filter(t => t.status === 'completed').length;
-              const total = stage.tools.length;
+              const { completed, total } = getStageCounts(stage);
 
               return (
                 <div key={stage.id} className="space-y-2">
@@ -33,7 +59,7 @@ export const StagesSummary: React.FC<StagesSummaryProps> = ({ stages }) => {
                     <div className="flex items-center gap-2">
                       <div
                         className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: stage.color }}
+                        style={{ backgroundColor: '#14b8a6' }}
                       />
                       <span className="font-medium text-sm text-gray-900">
                         {stage.name}
@@ -45,7 +71,7 @@ export const StagesSummary: React.FC<StagesSummaryProps> = ({ stages }) => {
                   </div>
                   <ProgressBar
                     progress={progress}
-                    color={stage.color}
+                    color="#14b8a6"
                     showLabel={false}
                     height="h-2"
                   />

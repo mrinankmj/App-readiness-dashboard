@@ -11,7 +11,7 @@ interface ProgressBarProps {
 
 export const ProgressBar: React.FC<ProgressBarProps> = ({
   progress,
-  color = '#3b82f6',
+  color = '#14b8a6', // teal
   height = 'h-2',
   showLabel = true,
   className,

@@ -41,9 +41,9 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, showIcon = tru
         return {
           label: 'Not Started',
           icon: XCircle,
-          bgColor: 'bg-gray-100',
-          textColor: 'text-gray-800',
-          iconColor: 'text-gray-600',
+          bgColor: 'bg-red-100',
+          textColor: 'text-red-800',
+          iconColor: 'text-red-600',
         };
     }
   };

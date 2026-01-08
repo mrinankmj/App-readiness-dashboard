@@ -5,7 +5,7 @@ import { AppUserDashboard } from './views/AppUserDashboard';
 import { EngineerDashboard } from './views/EngineerDashboard';
 import { OnboardAppModal } from './components/modals/OnboardAppModal';
 import { mockAppData, calculateReadinessScore } from './data/mockData';
-import { AppData, UserRole, Tool } from './types';
+import { AppData, UserRole, Tool, PhaseItem } from './types';
 
 function App() {
   const [userRole, setUserRole] = useState<UserRole>('app-user');
@@ -65,6 +65,41 @@ function App() {
     alert(`App "${appName}" onboarded successfully!`);
   };
 
+  const handleAddPhaseItem = (stageId: string, phaseId: string, itemName: string) => {
+    setAppData(prev => {
+      const newStages = prev.stages.map(stage => {
+        if (stage.id === stageId && stage.phases) {
+          const newPhases = stage.phases.map(phase => {
+            if (phase.id === phaseId) {
+              const newItem: PhaseItem = {
+                id: `${itemName.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`,
+                name: itemName,
+                status: 'todo',
+              };
+              return {
+                ...phase,
+                items: [...phase.items, newItem],
+              };
+            }
+            return phase;
+          });
+          return {
+            ...stage,
+            phases: newPhases,
+          };
+        }
+        return stage;
+      });
+
+      return {
+        ...prev,
+        stages: newStages,
+        overallScore: calculateReadinessScore(newStages),
+        lastUpdated: new Date().toISOString(),
+      };
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header
@@ -108,7 +143,11 @@ function App() {
                 {userRole === 'app-user' ? (
                   <AppUserDashboard appData={appData} />
                 ) : (
-                  <EngineerDashboard appData={appData} onAddTool={handleAddTool} />
+                  <EngineerDashboard 
+                    appData={appData} 
+                    onAddTool={handleAddTool}
+                    onAddPhaseItem={handleAddPhaseItem}
+                  />
                 )}
               </>
             )}

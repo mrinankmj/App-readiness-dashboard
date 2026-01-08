@@ -41,32 +41,45 @@ export const AppUserDashboard: React.FC<AppUserDashboardProps> = ({ appData }) =
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
         <StatCard
-          label="Total Tools"
-          value={appData.stages.reduce((acc, stage) => acc + stage.tools.length, 0)}
+          label="Total Items"
+          value={appData.stages.reduce((acc, stage) => {
+            if (stage.phases) {
+              return acc + stage.phases.reduce((sum, phase) => sum + phase.items.length, 0);
+            }
+            return acc + stage.tools.length;
+          }, 0)}
           color="bg-blue-500"
         />
         <StatCard
           label="Completed"
-          value={appData.stages.reduce(
-            (acc, stage) => acc + stage.tools.filter(t => t.status === 'completed').length,
-            0
-          )}
+          value={appData.stages.reduce((acc, stage) => {
+            if (stage.phases) {
+              return acc + stage.phases.reduce((sum, phase) => 
+                sum + phase.items.filter(item => item.status === 'complete').length, 0);
+            }
+            return acc + stage.tools.filter(t => t.status === 'completed').length;
+          }, 0)}
           color="bg-green-500"
         />
         <StatCard
           label="In Progress"
-          value={appData.stages.reduce(
-            (acc, stage) => acc + stage.tools.filter(t => t.status === 'in-progress').length,
-            0
-          )}
+          value={appData.stages.reduce((acc, stage) => {
+            if (stage.phases) {
+              return acc + stage.phases.reduce((sum, phase) => 
+                sum + phase.items.filter(item => item.status === 'todo').length, 0);
+            }
+            return acc + stage.tools.filter(t => t.status === 'in-progress').length;
+          }, 0)}
           color="bg-yellow-500"
         />
         <StatCard
           label="Not Started"
-          value={appData.stages.reduce(
-            (acc, stage) => acc + stage.tools.filter(t => t.status === 'not-started').length,
-            0
-          )}
+          value={appData.stages.reduce((acc, stage) => {
+            if (stage.phases) {
+              return 0; // Phases only have complete/todo, no not-started
+            }
+            return acc + stage.tools.filter(t => t.status === 'not-started').length;
+          }, 0)}
           color="bg-gray-500"
         />
       </div>

@@ -1,4 +1,4 @@
-import { AppData, Stage } from '@/types';
+import { AppData, Stage, Phase } from '@/types';
 
 export const mockStages: Stage[] = [
   {
@@ -25,9 +25,8 @@ export const mockStages: Stage[] = [
       {
         id: 'confluence',
         name: 'Confluence',
-        status: 'completed',
+        status: 'not-started',
         description: 'Documentation platform',
-        lastUpdated: '2025-10-05T09:15:00Z',
       },
     ],
   },
@@ -48,9 +47,8 @@ export const mockStages: Stage[] = [
       {
         id: 'pr-checker',
         name: 'PR Checker',
-        status: 'in-progress',
+        status: 'not-started',
         description: 'Pull request validation',
-        lastUpdated: '2025-10-08T08:30:00Z',
       },
       {
         id: 'git',
@@ -85,7 +83,7 @@ export const mockStages: Stage[] = [
       {
         id: 'cyberflow-sast',
         name: 'Cyberflow SAST',
-        status: 'in-progress',
+        status: 'completed',
         description: 'Static security testing',
         lastUpdated: '2025-10-08T10:15:00Z',
       },
@@ -107,14 +105,16 @@ export const mockStages: Stage[] = [
       {
         id: 'cucumber',
         name: 'Cucumber',
-        status: 'not-started',
+        status: 'completed',
         description: 'BDD testing framework',
+        lastUpdated: '2025-10-08T12:00:00Z',
       },
       {
         id: 'testng',
         name: 'TestNG',
-        status: 'not-started',
+        status: 'completed',
         description: 'Testing framework',
+        lastUpdated: '2025-10-08T13:00:00Z',
       },
       {
         id: 'selenium',
@@ -125,71 +125,122 @@ export const mockStages: Stage[] = [
     ],
   },
   {
-    id: 'deploy',
-    name: 'Deploy',
-    description: 'Deployment and release',
+    id: 'devops',
+    name: 'DevOps',
+    description: 'DevOps and observability',
     order: 5,
-    color: '#ef4444',
-    tools: [
+    color: '#3b82f6',
+    tools: [],
+    phases: [
       {
-        id: 'jenkins',
-        name: 'Jenkins',
-        status: 'not-started',
-        description: 'CI/CD automation',
+        id: 'phase-1',
+        name: 'Phase 1',
+        order: 1,
+        items: [
+          {
+            id: 'standard-pipeline',
+            name: 'Standard pipeline skeleton',
+            status: 'complete',
+          },
+          {
+            id: 'env-policy',
+            name: 'Env policy as code',
+            status: 'complete',
+          },
+          {
+            id: 'shared-lib',
+            name: 'Shared-lib adoption',
+            status: 'todo',
+          },
+          {
+            id: 'central-observability',
+            name: 'Central observability',
+            status: 'todo',
+          },
+          {
+            id: 'ai-diagnostics',
+            name: 'AI for diagnostics only',
+            status: 'todo',
+          },
+        ],
       },
       {
-        id: 'nexus',
-        name: 'Nexus',
-        status: 'not-started',
-        description: 'Artifact repository',
+        id: 'phase-2',
+        name: 'Phase 2',
+        order: 2,
+        items: [
+          {
+            id: 'auto-prs',
+            name: 'Auto PRs for fixes',
+            status: 'complete',
+          },
+          {
+            id: 'hotfix-workflows',
+            name: 'Hotfix workflows',
+            status: 'complete',
+          },
+          {
+            id: 'release-doc',
+            name: 'Release doc automation',
+            status: 'todo',
+          },
+          {
+            id: 'cross-repo',
+            name: 'Cross-repo impact detection',
+            status: 'todo',
+          },
+        ],
       },
       {
-        id: 'aws',
-        name: 'AWS',
-        status: 'not-started',
-        description: 'Cloud infrastructure',
-      },
-      {
-        id: 'shp',
-        name: 'SHP',
-        status: 'not-started',
-        description: 'Secure hosting platform',
-      },
-      {
-        id: 'ikp',
-        name: 'IKP',
-        status: 'not-started',
-        description: 'Infrastructure platform',
-      },
-    ],
-  },
-  {
-    id: 'monitor',
-    name: 'Monitor/Observability',
-    description: 'Monitoring and observability',
-    order: 6,
-    color: '#ec4899',
-    tools: [
-      {
-        id: 'splunk',
-        name: 'Splunk',
-        status: 'not-started',
-        description: 'Log management',
-      },
-      {
-        id: 'appd',
-        name: 'AppDynamics',
-        status: 'not-started',
-        description: 'Application performance monitoring',
+        id: 'phase-3',
+        name: 'Phase 3',
+        order: 3,
+        items: [
+          {
+            id: 'mcp-agents',
+            name: 'MCP-based agents',
+            status: 'todo',
+          },
+          {
+            id: 'self-service-debug',
+            name: 'Self-service debugging',
+            status: 'todo',
+          },
+          {
+            id: 'predictive-failures',
+            name: 'Predictive failures',
+            status: 'todo',
+          },
+          {
+            id: 'platform-slo',
+            name: 'Platform-level SLO ownership',
+            status: 'todo',
+          },
+        ],
       },
     ],
   },
 ];
 
 export const calculateReadinessScore = (stages: Stage[]): number => {
-  const allTools = stages.flatMap(stage => stage.tools);
-  const completedTools = allTools.filter(tool => tool.status === 'completed').length;
-  return Math.round((completedTools / allTools.length) * 100);
+  let totalItems = 0;
+  let completedItems = 0;
+
+  stages.forEach(stage => {
+    if (stage.phases) {
+      // Handle phases
+      stage.phases.forEach(phase => {
+        totalItems += phase.items.length;
+        completedItems += phase.items.filter(item => item.status === 'complete').length;
+      });
+    } else {
+      // Handle tools
+      totalItems += stage.tools.length;
+      completedItems += stage.tools.filter(tool => tool.status === 'completed').length;
+    }
+  });
+
+  return totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
 };
 
 export const mockAppData: AppData = {
@@ -197,6 +248,6 @@ export const mockAppData: AppData = {
   appId: 'dom-party-001',
   overallScore: calculateReadinessScore(mockStages),
   stages: mockStages,
-  lastUpdated: '2025-10-08T23:09:44+05:30',
+  lastUpdated: '2026-01-09T00:00:00Z',
   trend: 'up',
 };

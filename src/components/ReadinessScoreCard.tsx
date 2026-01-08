@@ -29,7 +29,13 @@ export const ReadinessScoreCard: React.FC<ReadinessScoreCardProps> = ({
               <span>Last Updated</span>
             </div>
             <span className="font-medium text-gray-900">
-              {new Date(lastUpdated).toLocaleDateString()}
+              {(() => {
+                const date = new Date(lastUpdated);
+                const day = date.getDate();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const year = date.getFullYear();
+                return `${day}/${month}/${year}`;
+              })()}
             </span>
           </div>
           

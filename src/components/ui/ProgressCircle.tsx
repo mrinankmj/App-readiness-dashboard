@@ -19,9 +19,7 @@ export const ProgressCircle: React.FC<ProgressCircleProps> = ({
   const offset = circumference - (score / 100) * circumference;
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return '#10b981'; // green
-    if (score >= 50) return '#f59e0b'; // yellow
-    return '#ef4444'; // red
+    return '#14b8a6'; // teal
   };
 
   const getTrendIcon = () => {

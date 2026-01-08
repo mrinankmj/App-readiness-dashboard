@@ -7,12 +7,14 @@ interface PipelineViewProps {
   stages: Stage[];
   isEngineerView?: boolean;
   onAddTool?: (stageId: string) => void;
+  onAddPhaseItem?: (stageId: string, phaseId: string, itemName: string) => void;
 }
 
 export const PipelineView: React.FC<PipelineViewProps> = ({
   stages,
   isEngineerView = false,
   onAddTool,
+  onAddPhaseItem,
 }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -90,6 +92,7 @@ export const PipelineView: React.FC<PipelineViewProps> = ({
                   stage={stage}
                   isEngineerView={isEngineerView}
                   onAddTool={onAddTool}
+                  onAddPhaseItem={onAddPhaseItem}
                 />
                 {index < stages.length - 1 && (
                   <div className="flex items-center justify-center pt-24">
